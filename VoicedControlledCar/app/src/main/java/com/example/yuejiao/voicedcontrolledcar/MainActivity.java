@@ -18,5 +18,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void enable_Voice(Button vButton){
         int i = 0;
+        int s = 1;
     }
 }
