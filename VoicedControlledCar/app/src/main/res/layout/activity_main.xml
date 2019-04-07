@@ -8,59 +8,45 @@
 
 
     <ImageButton
-        android:id="@+id/microphone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:adjustViewBounds="true"
-        android:padding="120dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/microphone" />
-
-    <TextView
-        android:id="@+id/clickText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginTop="42dp"
-        android:text="CLICK MICROPHONE"
-        android:textSize="33dp" />
-
-    <ImageButton
         android:id="@+id/downButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="180dp"
-        android:layout_marginLeft="180dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginRight="161dp"
-        android:layout_marginBottom="56dp"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="164dp"
+        android:layout_marginLeft="164dp"
+        android:layout_marginEnd="148dp"
+        android:layout_marginRight="148dp"
+        android:layout_marginBottom="0dp"
+
+        android:layout_toDownOf="@+id/shakeText"
+        android:orientation="horizontal"
         app:srcCompat="@android:drawable/arrow_down_float" />
 
     <ImageButton
         android:id="@+id/upButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="53dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="178dp"
-        android:layout_marginLeft="178dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginRight="161dp"
-        android:layout_marginBottom="170dp"
+        android:layout_alignParentUp="true"
+        android:layout_marginStart="159dp"
+        android:layout_marginLeft="159dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="156dp"
+        android:layout_marginRight="156dp"
+        android:layout_toUpOf="@+id/shakeText"
+        android:orientation="horizontal"
+
         app:srcCompat="@android:drawable/arrow_up_float" />
 
     <ImageButton
@@ -70,77 +56,43 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="583dp"
-        android:layout_marginEnd="74dp"
-        android:layout_marginRight="74dp"
+        android:layout_toLeftOf="@+id/shakeText"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="226dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:orientation="vertical"
+
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <ImageButton
         android:id="@+id/rightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="579dp"
-        android:layout_marginEnd="258dp"
-        android:layout_marginRight="258dp"
+        android:layout_centerInParent="true"
+
+
+        android:orientation="vertical"
+
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="227dp"
+        android:layout_marginEnd="328dp"
+        android:layout_marginRight="328dp"
+        android:layout_toRightOf="@+id/shakeText"
         android:scaleX="-1"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <TextView
-        android:id="@+id/forward"
+        android:id="@+id/shakeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="181dp"
-        android:layout_marginLeft="181dp"
-        android:layout_marginEnd="163dp"
-        android:layout_marginRight="163dp"
-        android:layout_marginBottom="217dp"
-        android:text="FORWARD" />
-
-    <TextView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="177dp"
-        android:layout_marginRight="177dp"
-        android:layout_marginBottom="21dp"
-        android:text="BACK" />
-
-    <TextView
-        android:id="@+id/left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/microphone"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="115dp"
-        android:layout_toStartOf="@+id/rightButton"
-        android:layout_toLeftOf="@+id/rightButton"
-        android:text="LEFT" />
-
-    <TextView
-        android:id="@+id/right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginBottom="114dp"
-        android:text="RIGHT" />
+        android:layout_centerInParent="true"
+        android:textSize="30dp"
+        android:text="Shake The Phone" />
 
 </RelativeLayout>
