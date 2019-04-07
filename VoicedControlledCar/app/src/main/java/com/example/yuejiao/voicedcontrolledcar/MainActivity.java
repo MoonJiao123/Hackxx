@@ -17,6 +17,6 @@ public class MainActivity extends AppCompatActivity {
      * sense the button press
      */
     public void enable_Voice(Button vButton){
-
+        int i = 0;
     }
 }
