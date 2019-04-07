@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,13 +29,15 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
-    ImageButton microphone;
+    ImageButton servoL;
+    ImageButton servoR;
     ImageButton upButton;
     ImageButton downButton;
     ImageButton leftButton;
     ImageButton rightButton;
     BluetoothSPP bt;
     BluetoothAdapter adapter;
+    private boolean shake;
 
     private SensorManager sensorManager;
     private Sensor sensor;
@@ -44,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        microphone = (ImageButton) findViewById(R.id.microphone);
+        servoL = (ImageButton) findViewById(R.id.lookLeft);
+        servoR = (ImageButton) findViewById(R.id.lookRight);
         upButton = (ImageButton) findViewById(R.id.upButton);
         downButton = (ImageButton) findViewById(R.id.downButton);
         leftButton = (ImageButton) findViewById(R.id.leftButton);
@@ -63,74 +67,98 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-        microphone.setOnTouchListener(new View.OnTouchListener() {
+        upButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // record and store to direction
-                return false;
-            }
-        });
+            public void onClick(View v) {
+                for (int i = 0; i < 6000; i++){
+                    forward();
 
-        upButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
-
-                    return true;
-                } else {
-                    stop();
-                    return true;
-               }
+                }
             }
 
 
 
         });
 
-        downButton.setOnTouchListener(new View.OnTouchListener() {
+        downButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                backward();
-                return false;
+            public void onClick(View v) {
+                for (int i = 0; i < 6000; i++) {
+                    backward();
+
+                }
             }
         });
 
-        leftButton.setOnTouchListener(new View.OnTouchListener() {
+        leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                left();
-                return false;
+            public void onClick(View v) {
+                for (int i = 0; i < 3000; i++){
+                    left();
+
+                }
             }
         });
 
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                right();
+                for (int i = 0; i < 3000; i++){
+                    right();
+
+                }
             }
         });
 
-
+        servoL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < 30; i++){
+                    lookLeft();
+                }
+            }
+        });
+        servoR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < 30; i++){
+                    lookRight();
+                }
+            }
+        });
+    }
+    public void toggleShake(View view){
+        if (shake){ shake = false; }
+        else { shake = true; }
     }
 
     public void onSensorChanged(SensorEvent event) {
         // we received a sensor event. it is a good practice to check
         // that we received the proper event
-        if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
-            Toast.makeText(getApplicationContext(), "sense" + event.values[0], Toast.LENGTH_SHORT).show();
-            if (event.values[0]*10 > 1.5 ){
+        if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR && shake) {
+            //Toast.makeText(getApplicationContext(), "sense" + event.values[0], Toast.LENGTH_SHORT).show();
+            if (event.values[0]*10 > 1.5 && Math.abs(event.values[0]) > Math.abs(event.values[1])){
                 forward();
-
+                forward();
+                forward();
             }
-            if (event.values[0]*10 < -1.5) {
+            if (event.values[0]*10 < -1.5 && Math.abs(event.values[0]) > Math.abs(event.values[1])) {
+                backward();
+                backward();
                 backward();
             }
-            if (event.values[1]*10 > 1.5) {
+            if (event.values[1]*10 > 1.5 && Math.abs(event.values[1]) > Math.abs(event.values[0])) {
+                right();
+                right();
                 right();
             }
-            if (event.values[1]*10 < -1.5 ){
+            if (event.values[1]*10 < -1.5 && Math.abs(event.values[1]) > Math.abs(event.values[0])){
+                left();
+                left();
                 left();
             }
+            stop();
+            stop();
             stop();
         }
     }
@@ -141,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.d("main", "on Start");
         Toast.makeText(getApplicationContext(), "onStart", Toast.LENGTH_SHORT).show();
         bTCtrl();
-        sensorManager.registerListener(this, sensor, 100);
+        sensorManager.registerListener(this, sensor, 30);
     }
 
     @Override
@@ -154,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume(){
         super.onResume();
         Log.d("main", "on Resume");
-       sensorManager.registerListener(this, sensor, 100);
+       sensorManager.registerListener(this, sensor, 30);
     }
 
     @Override
@@ -195,15 +223,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void left(){
         Log.d("control", "left");
 
-        bt.send(new byte[]{0x61}, false);
+        bt.send(new byte[]{0x64}, false);
     }
     public void right(){
         Log.d("control", "right");
 
-        bt.send(new byte[]{0x64}, false);
+        bt.send(new byte[]{0x61}, false);
     }
     public void stop(){
         bt.send(new byte[]{0x11}, false);
+    }
+
+    public void lookLeft(){
+        bt.send(new byte[]{0x71}, false);
+    }
+
+    public void lookRight(){
+        bt.send(new byte[]{0x65},false);
     }
 
     public void bTCtrl(){

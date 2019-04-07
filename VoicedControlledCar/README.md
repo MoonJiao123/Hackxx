@@ -1,2 +1,2 @@
 # Hackxx
-Hackxxx project
+Hackxxx project - gyroscope arduino car control
