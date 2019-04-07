@@ -7,6 +7,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +26,7 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     ImageButton microphone;
     ImageButton upButton;
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     ImageButton rightButton;
     BluetoothSPP bt;
     BluetoothAdapter adapter;
+
+    private SensorManager sensorManager;
+    private Sensor sensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
 
 
 
@@ -62,24 +71,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        upButton.setOnClickListener(new View.OnClickListener() {
+        upButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                forward();
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+
+                    return true;
+                } else {
+                    stop();
+                    return true;
+               }
             }
+
+
+
         });
 
-        downButton.setOnClickListener(new View.OnClickListener() {
+        downButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 backward();
+                return false;
             }
         });
 
-        leftButton.setOnClickListener(new View.OnClickListener() {
+        leftButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 left();
+                return false;
             }
         });
 
@@ -93,12 +113,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onSensorChanged(SensorEvent event) {
+        // we received a sensor event. it is a good practice to check
+        // that we received the proper event
+        if (event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR) {
+            Toast.makeText(getApplicationContext(), "sense" + event.values[0], Toast.LENGTH_SHORT).show();
+            if (event.values[0]*10 > 1.5 ){
+                forward();
+
+            }
+            if (event.values[0]*10 < -1.5) {
+                backward();
+            }
+            if (event.values[1]*10 > 1.5) {
+                right();
+            }
+            if (event.values[1]*10 < -1.5 ){
+                left();
+            }
+            stop();
+        }
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
         Log.d("main", "on Start");
         Toast.makeText(getApplicationContext(), "onStart", Toast.LENGTH_SHORT).show();
         bTCtrl();
+        sensorManager.registerListener(this, sensor, 100);
     }
 
     @Override
@@ -111,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         Log.d("main", "on Resume");
+       sensorManager.registerListener(this, sensor, 100);
     }
 
     @Override
@@ -132,28 +176,34 @@ public class MainActivity extends AppCompatActivity {
         bt.stopService();
     }
 
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
     /**
      * send hex over bluetooth
      */
     public void forward(){
         Log.d("control", "forward");
-        Toast.makeText(getApplicationContext(), "forward", Toast.LENGTH_SHORT).show();
+
         bt.send(new byte[]{0x77}, false);
     }
     public void backward(){
         Log.d("control", "back");
-        Toast.makeText(getApplicationContext(), "back", Toast.LENGTH_SHORT).show();
+
         bt.send(new byte[]{0x73}, false);
     }
     public void left(){
         Log.d("control", "left");
-        Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+
         bt.send(new byte[]{0x61}, false);
     }
     public void right(){
         Log.d("control", "right");
-        Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+
         bt.send(new byte[]{0x64}, false);
+    }
+    public void stop(){
+        bt.send(new byte[]{0x11}, false);
     }
 
     public void bTCtrl(){
